@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="compiled-css/panda.css"/>
     <link rel="stylesheet" href="modal.css"/>
     <link rel="stylesheet" href="css/jquery.qtip.min.css">
-    <script src="js/panda.js"></script>
     <script src="cytoscape321.js"></script>
     <script src="cytoscape-canvas.js"></script>
     <script src="js/cola.js"></script>
@@ -15,6 +14,7 @@
     <script src="js/jquery.qtip.min.js"></script>
     <script src="paper-full.min.js"></script>
     <script src="drawBotanical.js"></script>
+    <script src="js/panda.js"></script>
     <title>GraphTea</title>
 </head>
 <body>
@@ -146,6 +146,16 @@
             <button onclick="do_saves()">Go</button>
             <textarea name="Text2" cols="35" rows="4" id="outputResults"></textarea>
         </div>
+        <hr>
+
+        <p id="strings-graph-actions"></p>
+        <div>
+            <select id="output">
+                <option>Cartesian Product</option>
+            </select>
+            <button id="do_products">Go</button>
+        </div>
+
         <!--<button onclick="clearCanvas()">Clear</button>-->
 
         <!--<div id="reportResults"></div>-->
