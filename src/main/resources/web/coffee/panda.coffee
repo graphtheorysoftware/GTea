@@ -21,8 +21,7 @@ allOpenGraphs = () ->
     localStorage.setObject 'allOpenGraphs', {}
 
     # need a change in the localStorage so the event triggers in all windows
-    localStorage.setItem 'requestOpenGraphs', 0
-    localStorage.setItem 'requestOpenGraphs', 1
+    localStorage.setItem 'requestOpenGraphs', Math.random()
 
     #and also add the curent tab's graph
     addMyUUIDToStorage()

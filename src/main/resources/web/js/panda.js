@@ -24,8 +24,7 @@
 
   allOpenGraphs = function() {
     localStorage.setObject('allOpenGraphs', {});
-    localStorage.setItem('requestOpenGraphs', 0);
-    localStorage.setItem('requestOpenGraphs', 1);
+    localStorage.setItem('requestOpenGraphs', Math.random());
     addMyUUIDToStorage();
     return localStorage.getObject('allOpenGraphs');
   };
