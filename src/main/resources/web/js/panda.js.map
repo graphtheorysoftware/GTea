@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "panda.js",
+  "sourceRoot": "..",
+  "sources": [
+    "coffee/panda.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,MAAA;;EAAA,CAAA,GAAI;AAAJ"
+}
