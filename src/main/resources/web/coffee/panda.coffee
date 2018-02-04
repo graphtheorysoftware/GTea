@@ -1,39 +1,31 @@
 $ ->
-    document.addEventListener 'ping', (e) -> addMyUUIDToStorage
-
-    document.addEventListener 'newGraph', (e) ->
-        alert e.detail
-
     $(document).on "click", "#do_products", ->
-        alert allOpenGraphs()
+        alert 'uhum'
 
 
-
-
-
-#keeping track of all open graphs in all tabs
+#keeping track of all open graphs in all windows
 $ ->
-    $(window).bind 'storage', (event) ->
-        if (event.key == 'requestOpenGraphs')
-            addMyUUIDToStorage()
+    #Readable Unique ID
+    window.ruid = Number(localStorage.getItem('lastRUID') || 0) + 1
+    localStorage.setItem 'lastRUID', window.ruid
+    console.log window.ruid
 
-allOpenGraphs = () ->
-    localStorage.setObject 'allOpenGraphs', {}
-
-    # need a change in the localStorage so the event triggers in all windows
-    localStorage.setItem 'requestOpenGraphs', Math.random()
-
-    #and also add the curent tab's graph
-    addMyUUIDToStorage()
-
-    # the event propagates all around and then...
-    localStorage.getObject 'allOpenGraphs'
-
-
-addMyUUIDToStorage = ()->
+    #keep a list of open windows
+    #1- when window opens
     all = localStorage.getObject 'allOpenGraphs'
-    all[uuid] = 1
+    all[window.ruid] = uuid
     localStorage.setObject 'allOpenGraphs', all
+
+    #2- when closing the window
+    window.onbeforeunload = () ->
+        # closing the last window set it to 0
+        all = localStorage.getObject 'allOpenGraphs'
+        delete all[window.ruid]
+        localStorage.setObject 'allOpenGraphs', all
+
+        #reset to zero when we close the last window
+        if (Object.keys(localStorage.getObject('allOpenGraphs')).length == 0)
+            localStorage.setItem 'lastRUID', 0
 
 
 Storage.prototype.setObject = (key, value) -> this.setItem(key, JSON.stringify(value))
