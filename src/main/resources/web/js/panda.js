@@ -8,7 +8,8 @@
 
   $(function() {
     var all;
-    window.ruid = Number(localStorage.getItem('lastRUID') || 0) + 1;
+    window.ruid = "G" + (Number(localStorage.getItem('lastRUID') || 0) + 1);
+    $('#RUID').html(window.ruid);
     localStorage.setItem('lastRUID', window.ruid);
     console.log(window.ruid);
     all = localStorage.getObject('allOpenGraphs');

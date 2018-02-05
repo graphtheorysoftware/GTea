@@ -98,6 +98,26 @@ $.get(serverAddr + 'mats/')
         });
     });
 
+function graphAction(){
+    var actionProps = "";
+    $('#graphActionsProps').children('input').each(function (i, item) {
+        actionProps += item.name + ":" + item.value + "-"
+    });
+    if (actionProps == "") {
+        actionProps = "no";
+    }
+    $.get(serverAddr + 'GraphAction/'
+        + $('#graphActions').find('option:selected').text() + "--"
+        + ($('#props_keys').html() + ":" + $('#props_vals').val()) + "--"
+        + ($('#reportPropsKeys').html() + ":" + $('#reportPropsVals').val())
+        + "--" + uuid)
+        .done(function (data) {
+
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        });
+}
 
 function Report() {
     $('#reportResults').html('computing...');
