@@ -11,7 +11,10 @@ import graphtea.extensions.io.LoadMtx;
 import graphtea.extensions.io.SaveGraph;
 import graphtea.extensions.reports.coloring.ColumnIntersectionGraph;
 import graphtea.graph.graph.*;
+import graphtea.platform.extension.Extension;
+import graphtea.plugins.graphgenerator.GraphGenerator;
 import graphtea.plugins.graphgenerator.core.extension.GraphGeneratorExtension;
+import graphtea.plugins.main.extension.GraphActionExtension;
 import graphtea.plugins.main.saveload.core.GraphIOException;
 import graphtea.plugins.reports.extension.GraphReportExtension;
 import org.codehaus.jettison.json.JSONArray;
@@ -592,43 +595,23 @@ public class RequestHandler {
     @Produces("application/json;charset=utf-8")
     public Response getGraphs() {
         JSONObject jsonObject = new JSONObject();
-        Reflections reflectionsGenerators = new Reflections("graphtea.extensions.generators");
-        Set<Class<? extends GraphGeneratorExtension>> subTypes = reflectionsGenerators.getSubTypesOf(GraphGeneratorExtension.class);
-        Vector<String> graphs = new Vector<>();
-        JSONArray jsonArray = new JSONArray();
-        for(Class<? extends GraphGeneratorExtension> c : subTypes) {
-            JSONObject jo = new JSONObject();
-            String classSimpleName = c.getSimpleName();
-            try {
-                jo.put("name",classSimpleName);
-                jo.put("desc", c.newInstance().getDescription());
-            } catch (JSONException | IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
-            graphs.add(classSimpleName);
-            extensionNameToClass.put(classSimpleName,c);
-            Field[] fs = c.getFields();
-            JSONArray properties = new JSONArray();
-            for(Field f : fs)
-                properties.put(f.getName()+":"+f.getType().getSimpleName());
-            try {
-                jo.put("properties",properties);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            jsonArray.put(jo);
-        }
         try {
-            jsonObject.put("graphs",jsonArray);
+            jsonObject.put("graphs", getExtensions("graphtea.extensions.generators", GraphGeneratorExtension.class));
+            jsonObject.put("reports",getExtensions("graphtea.extensions.reports", GraphReportExtension.class));
+            jsonObject.put("actions",getExtensions("graphtea.extensions.actions", GraphActionExtension.class));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Reflections reflectionsReports = new Reflections("graphtea.extensions.reports");
-        Set<Class<? extends GraphReportExtension>> subTypesReport = reflectionsReports.getSubTypesOf(GraphReportExtension.class);
+        return Response.ok(jsonObject.toString()).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    private JSONArray getExtensions(String extensionPackage, Class extensionClass) {
+        Reflections reflectionsReports = new Reflections(extensionPackage);
+        Set<Class> subTypesReport = reflectionsReports.getSubTypesOf(extensionClass);
         Vector<String> reports = new Vector<>();
         JSONArray jsonArray2 = new JSONArray();
-        for(Class<? extends GraphReportExtension> c : subTypesReport) {
+        for(Class<? extends Extension> c : subTypesReport) {
             JSONObject jo = new JSONObject();
             String classSimpleName = c.getSimpleName();
             try {
@@ -651,17 +634,7 @@ public class RequestHandler {
             reports.add(classSimpleName);
             extensionNameToClass.put(classSimpleName,c);
         }
-//        Collections.sort(reports);
-//        for (String s : reports) {
-//            jsonArray2.put(s);
-//        }
-        try {
-            jsonObject.put("reports",jsonArray2);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return Response.ok(jsonObject.toString()).header("Access-Control-Allow-Origin", "*").build();
+        return jsonArray2;
     }
 
     @GET

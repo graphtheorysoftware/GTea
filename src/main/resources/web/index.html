@@ -149,12 +149,14 @@
         <hr>
 
         <p id="strings-graph-actions"></p>
-        <div>
-            <select id="output">
-                <option>Cartesian Product</option>
-            </select>
-            <button id="do_products">Go</button>
+        <select id="graphActions"></select>
+        <div id="graphActionsProps"></div>
+        <button onclick="graphActions()">Go</button>
+        <div class="tooltip"><i class="fa fa-info-circle" aria-hidden="true"></i>
+            <span id="tooltiptextGraphAction" class="tooltiptext">A brief description</span>
         </div>
+        <em>Graph ID:<span id="RUID"></span></em>
+
 
         <!--<button onclick="clearCanvas()">Clear</button>-->
 
